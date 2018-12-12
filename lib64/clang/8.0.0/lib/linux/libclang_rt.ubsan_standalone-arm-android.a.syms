@@ -1,4 +1,5 @@
 {
+  __sanitizer_acquire_crash_state;
   __sanitizer_cov_8bit_counters_init;
   __sanitizer_cov_dump;
   __sanitizer_cov_pcs_init;

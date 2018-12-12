@@ -188,7 +188,7 @@ DEF_ADD_DATA(ObjCPropertyRefExpr, {
 )
 DEF_ADD_DATA(PredefinedExpr, {
 
-    addData(S->getIdentType());
+    addData(S->getIdentKind());
   }
 )
 DEF_ADD_DATA(Stmt, {

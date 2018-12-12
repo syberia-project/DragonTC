@@ -484,6 +484,48 @@ const char *AcquiredBeforeAttr::getSpelling() const {
   }
 }
 
+AddressSpaceAttr *AddressSpaceAttr::clone(ASTContext &C) const {
+  auto *A = new (C) AddressSpaceAttr(getLocation(), C, addressSpace, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void AddressSpaceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((address_space(" << getAddressSpace() << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::address_space(" << getAddressSpace() << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " [[clang::address_space(" << getAddressSpace() << ")]]";
+    break;
+  }
+}
+}
+
+const char *AddressSpaceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "address_space";
+  case 1:
+    return "address_space";
+  case 2:
+    return "address_space";
+  }
+}
+
 AliasAttr *AliasAttr::clone(ASTContext &C) const {
   auto *A = new (C) AliasAttr(getLocation(), C, getAliasee(), getSpellingListIndex());
   A->Inherited = Inherited;
@@ -803,6 +845,42 @@ const char *AllocSizeAttr::getSpelling() const {
     return "alloc_size";
   case 1:
     return "alloc_size";
+  }
+}
+
+AlwaysDestroyAttr *AlwaysDestroyAttr::clone(ASTContext &C) const {
+  auto *A = new (C) AlwaysDestroyAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void AlwaysDestroyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((always_destroy))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::always_destroy]]";
+    break;
+  }
+}
+}
+
+const char *AlwaysDestroyAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "always_destroy";
+  case 1:
+    return "always_destroy";
   }
 }
 
@@ -1812,6 +1890,17 @@ void CPUDispatchAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
   OS << ")]]";
     break;
   }
+  case 3 : {
+    OS << " __declspec(cpu_dispatch(";
+  bool isFirst = true;
+  for (const auto &Val : cpus()) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << Val;
+  }
+  OS << "))";
+    break;
+  }
 }
 }
 
@@ -1825,6 +1914,8 @@ const char *CPUDispatchAttr::getSpelling() const {
   case 1:
     return "cpu_dispatch";
   case 2:
+    return "cpu_dispatch";
+  case 3:
     return "cpu_dispatch";
   }
 }
@@ -1875,6 +1966,17 @@ void CPUSpecificAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
   OS << ")]]";
     break;
   }
+  case 3 : {
+    OS << " __declspec(cpu_specific(";
+  bool isFirst = true;
+  for (const auto &Val : cpus()) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << Val;
+  }
+  OS << "))";
+    break;
+  }
 }
 }
 
@@ -1888,6 +1990,8 @@ const char *CPUSpecificAttr::getSpelling() const {
   case 1:
     return "cpu_specific";
   case 2:
+    return "cpu_specific";
+  case 3:
     return "cpu_specific";
   }
 }
@@ -2716,6 +2820,21 @@ const char *DLLExportAttr::getSpelling() const {
   }
 }
 
+DLLExportStaticLocalAttr *DLLExportStaticLocalAttr::clone(ASTContext &C) const {
+  auto *A = new (C) DLLExportStaticLocalAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void DLLExportStaticLocalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+const char *DLLExportStaticLocalAttr::getSpelling() const {
+  return "(No spelling)";
+}
+
 DLLImportAttr *DLLImportAttr::clone(ASTContext &C) const {
   auto *A = new (C) DLLImportAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -2756,6 +2875,21 @@ const char *DLLImportAttr::getSpelling() const {
   case 2:
     return "dllimport";
   }
+}
+
+DLLImportStaticLocalAttr *DLLImportStaticLocalAttr::clone(ASTContext &C) const {
+  auto *A = new (C) DLLImportStaticLocalAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void DLLImportStaticLocalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+const char *DLLImportStaticLocalAttr::getSpelling() const {
+  return "(No spelling)";
 }
 
 DeprecatedAttr *DeprecatedAttr::clone(ASTContext &C) const {
@@ -3025,6 +3159,48 @@ const char *EnumExtensibilityAttr::getSpelling() const {
     return "enum_extensibility";
   case 2:
     return "enum_extensibility";
+  }
+}
+
+ExcludeFromExplicitInstantiationAttr *ExcludeFromExplicitInstantiationAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ExcludeFromExplicitInstantiationAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ExcludeFromExplicitInstantiationAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((exclude_from_explicit_instantiation))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::exclude_from_explicit_instantiation]]";
+    break;
+  }
+  case 2 : {
+    OS << " [[clang::exclude_from_explicit_instantiation]]";
+    break;
+  }
+}
+}
+
+const char *ExcludeFromExplicitInstantiationAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "exclude_from_explicit_instantiation";
+  case 1:
+    return "exclude_from_explicit_instantiation";
+  case 2:
+    return "exclude_from_explicit_instantiation";
   }
 }
 
@@ -4992,6 +5168,42 @@ const char *NoDebugAttr::getSpelling() const {
   }
 }
 
+NoDestroyAttr *NoDestroyAttr::clone(ASTContext &C) const {
+  auto *A = new (C) NoDestroyAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void NoDestroyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((no_destroy))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::no_destroy]]";
+    break;
+  }
+}
+}
+
+const char *NoDestroyAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "no_destroy";
+  case 1:
+    return "no_destroy";
+  }
+}
+
 NoDuplicateAttr *NoDuplicateAttr::clone(ASTContext &C) const {
   auto *A = new (C) NoDuplicateAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -6001,6 +6213,48 @@ const char *ObjCExplicitProtocolImplAttr::getSpelling() const {
   }
 }
 
+ObjCGCAttr *ObjCGCAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCGCAttr(getLocation(), C, kind, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCGCAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_gc(" << (getKind() ? getKind()->getName() : "") << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::objc_gc(" << (getKind() ? getKind()->getName() : "") << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " [[clang::objc_gc(" << (getKind() ? getKind()->getName() : "") << ")]]";
+    break;
+  }
+}
+}
+
+const char *ObjCGCAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_gc";
+  case 1:
+    return "objc_gc";
+  case 2:
+    return "objc_gc";
+  }
+}
+
 ObjCIndependentClassAttr *ObjCIndependentClassAttr::clone(ASTContext &C) const {
   auto *A = new (C) ObjCIndependentClassAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -6040,6 +6294,66 @@ const char *ObjCIndependentClassAttr::getSpelling() const {
     return "objc_independent_class";
   case 2:
     return "objc_independent_class";
+  }
+}
+
+ObjCInertUnsafeUnretainedAttr *ObjCInertUnsafeUnretainedAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCInertUnsafeUnretainedAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCInertUnsafeUnretainedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __unsafe_unretained";
+    break;
+  }
+}
+}
+
+const char *ObjCInertUnsafeUnretainedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__unsafe_unretained";
+  }
+}
+
+ObjCKindOfAttr *ObjCKindOfAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCKindOfAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCKindOfAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __kindof";
+    break;
+  }
+}
+}
+
+const char *ObjCKindOfAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__kindof";
   }
 }
 
@@ -6124,6 +6438,48 @@ const char *ObjCNSObjectAttr::getSpelling() const {
     return "NSObject";
   case 2:
     return "NSObject";
+  }
+}
+
+ObjCOwnershipAttr *ObjCOwnershipAttr::clone(ASTContext &C) const {
+  auto *A = new (C) ObjCOwnershipAttr(getLocation(), C, kind, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void ObjCOwnershipAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_ownership(" << (getKind() ? getKind()->getName() : "") << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[clang::objc_ownership(" << (getKind() ? getKind()->getName() : "") << ")]]";
+    break;
+  }
+  case 2 : {
+    OS << " [[clang::objc_ownership(" << (getKind() ? getKind()->getName() : "") << ")]]";
+    break;
+  }
+}
+}
+
+const char *ObjCOwnershipAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "objc_ownership";
+  case 1:
+    return "objc_ownership";
+  case 2:
+    return "objc_ownership";
   }
 }
 
@@ -6523,6 +6879,114 @@ const char *OpenCLAccessAttr::getSpelling() const {
   }
 }
 
+OpenCLConstantAddressSpaceAttr *OpenCLConstantAddressSpaceAttr::clone(ASTContext &C) const {
+  auto *A = new (C) OpenCLConstantAddressSpaceAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void OpenCLConstantAddressSpaceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __constant";
+    break;
+  }
+  case 1 : {
+    OS << " constant";
+    break;
+  }
+}
+}
+
+const char *OpenCLConstantAddressSpaceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__constant";
+  case 1:
+    return "constant";
+  }
+}
+
+OpenCLGenericAddressSpaceAttr *OpenCLGenericAddressSpaceAttr::clone(ASTContext &C) const {
+  auto *A = new (C) OpenCLGenericAddressSpaceAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void OpenCLGenericAddressSpaceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __generic";
+    break;
+  }
+  case 1 : {
+    OS << " generic";
+    break;
+  }
+}
+}
+
+const char *OpenCLGenericAddressSpaceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__generic";
+  case 1:
+    return "generic";
+  }
+}
+
+OpenCLGlobalAddressSpaceAttr *OpenCLGlobalAddressSpaceAttr::clone(ASTContext &C) const {
+  auto *A = new (C) OpenCLGlobalAddressSpaceAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void OpenCLGlobalAddressSpaceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __global";
+    break;
+  }
+  case 1 : {
+    OS << " global";
+    break;
+  }
+}
+}
+
+const char *OpenCLGlobalAddressSpaceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__global";
+  case 1:
+    return "global";
+  }
+}
+
 OpenCLIntelReqdSubGroupSizeAttr *OpenCLIntelReqdSubGroupSizeAttr::clone(ASTContext &C) const {
   auto *A = new (C) OpenCLIntelReqdSubGroupSizeAttr(getLocation(), C, subGroupSize, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -6586,6 +7050,78 @@ const char *OpenCLKernelAttr::getSpelling() const {
     return "__kernel";
   case 1:
     return "kernel";
+  }
+}
+
+OpenCLLocalAddressSpaceAttr *OpenCLLocalAddressSpaceAttr::clone(ASTContext &C) const {
+  auto *A = new (C) OpenCLLocalAddressSpaceAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void OpenCLLocalAddressSpaceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __local";
+    break;
+  }
+  case 1 : {
+    OS << " local";
+    break;
+  }
+}
+}
+
+const char *OpenCLLocalAddressSpaceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__local";
+  case 1:
+    return "local";
+  }
+}
+
+OpenCLPrivateAddressSpaceAttr *OpenCLPrivateAddressSpaceAttr::clone(ASTContext &C) const {
+  auto *A = new (C) OpenCLPrivateAddressSpaceAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void OpenCLPrivateAddressSpaceAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __private";
+    break;
+  }
+  case 1 : {
+    OS << " private";
+    break;
+  }
+}
+}
+
+const char *OpenCLPrivateAddressSpaceAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__private";
+  case 1:
+    return "private";
   }
 }
 
@@ -7288,6 +7824,66 @@ const char *PtGuardedVarAttr::getSpelling() const {
   }
 }
 
+Ptr32Attr *Ptr32Attr::clone(ASTContext &C) const {
+  auto *A = new (C) Ptr32Attr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void Ptr32Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __ptr32";
+    break;
+  }
+}
+}
+
+const char *Ptr32Attr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__ptr32";
+  }
+}
+
+Ptr64Attr *Ptr64Attr::clone(ASTContext &C) const {
+  auto *A = new (C) Ptr64Attr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void Ptr64Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __ptr64";
+    break;
+  }
+}
+}
+
+const char *Ptr64Attr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__ptr64";
+  }
+}
+
 PureAttr *PureAttr::clone(ASTContext &C) const {
   auto *A = new (C) PureAttr(getLocation(), C, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -7937,6 +8533,36 @@ const char *ReturnsTwiceAttr::getSpelling() const {
     return "returns_twice";
   case 1:
     return "returns_twice";
+  }
+}
+
+SPtrAttr *SPtrAttr::clone(ASTContext &C) const {
+  auto *A = new (C) SPtrAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void SPtrAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __sptr";
+    break;
+  }
+}
+}
+
+const char *SPtrAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__sptr";
   }
 }
 
@@ -8792,6 +9418,96 @@ const char *TryAcquireCapabilityAttr::getSpelling() const {
   }
 }
 
+TypeNonNullAttr *TypeNonNullAttr::clone(ASTContext &C) const {
+  auto *A = new (C) TypeNonNullAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void TypeNonNullAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " _Nonnull";
+    break;
+  }
+}
+}
+
+const char *TypeNonNullAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "_Nonnull";
+  }
+}
+
+TypeNullUnspecifiedAttr *TypeNullUnspecifiedAttr::clone(ASTContext &C) const {
+  auto *A = new (C) TypeNullUnspecifiedAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void TypeNullUnspecifiedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " _Null_unspecified";
+    break;
+  }
+}
+}
+
+const char *TypeNullUnspecifiedAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "_Null_unspecified";
+  }
+}
+
+TypeNullableAttr *TypeNullableAttr::clone(ASTContext &C) const {
+  auto *A = new (C) TypeNullableAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void TypeNullableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " _Nullable";
+    break;
+  }
+}
+}
+
+const char *TypeNullableAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "_Nullable";
+  }
+}
+
 TypeTagForDatatypeAttr *TypeTagForDatatypeAttr::clone(ASTContext &C) const {
   auto *A = new (C) TypeTagForDatatypeAttr(getLocation(), C, argumentKind, matchingCType, layoutCompatible, mustBeNull, getSpellingListIndex());
   A->Inherited = Inherited;
@@ -8873,6 +9589,36 @@ const char *TypeVisibilityAttr::getSpelling() const {
     return "type_visibility";
   case 2:
     return "type_visibility";
+  }
+}
+
+UPtrAttr *UPtrAttr::clone(ASTContext &C) const {
+  auto *A = new (C) UPtrAttr(getLocation(), C, getSpellingListIndex());
+  A->Inherited = Inherited;
+  A->IsPackExpansion = IsPackExpansion;
+  A->Implicit = Implicit;
+  return A;
+}
+
+void UPtrAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __uptr";
+    break;
+  }
+}
+}
+
+const char *UPtrAttr::getSpelling() const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    return "(No spelling)";
+  case 0:
+    return "__uptr";
   }
 }
 
@@ -9590,6 +10336,8 @@ const char *Attr::getSpelling() const {
     return cast<AcquiredAfterAttr>(this)->getSpelling();
   case attr::AcquiredBefore:
     return cast<AcquiredBeforeAttr>(this)->getSpelling();
+  case attr::AddressSpace:
+    return cast<AddressSpaceAttr>(this)->getSpelling();
   case attr::Alias:
     return cast<AliasAttr>(this)->getSpelling();
   case attr::AlignMac68k:
@@ -9602,6 +10350,8 @@ const char *Attr::getSpelling() const {
     return cast<AllocAlignAttr>(this)->getSpelling();
   case attr::AllocSize:
     return cast<AllocSizeAttr>(this)->getSpelling();
+  case attr::AlwaysDestroy:
+    return cast<AlwaysDestroyAttr>(this)->getSpelling();
   case attr::AlwaysInline:
     return cast<AlwaysInlineAttr>(this)->getSpelling();
   case attr::AnalyzerNoReturn:
@@ -9698,8 +10448,12 @@ const char *Attr::getSpelling() const {
     return cast<ConvergentAttr>(this)->getSpelling();
   case attr::DLLExport:
     return cast<DLLExportAttr>(this)->getSpelling();
+  case attr::DLLExportStaticLocal:
+    return cast<DLLExportStaticLocalAttr>(this)->getSpelling();
   case attr::DLLImport:
     return cast<DLLImportAttr>(this)->getSpelling();
+  case attr::DLLImportStaticLocal:
+    return cast<DLLImportStaticLocalAttr>(this)->getSpelling();
   case attr::Deprecated:
     return cast<DeprecatedAttr>(this)->getSpelling();
   case attr::Destructor:
@@ -9714,6 +10468,8 @@ const char *Attr::getSpelling() const {
     return cast<EnableIfAttr>(this)->getSpelling();
   case attr::EnumExtensibility:
     return cast<EnumExtensibilityAttr>(this)->getSpelling();
+  case attr::ExcludeFromExplicitInstantiation:
+    return cast<ExcludeFromExplicitInstantiationAttr>(this)->getSpelling();
   case attr::ExclusiveTrylockFunction:
     return cast<ExclusiveTrylockFunctionAttr>(this)->getSpelling();
   case attr::ExternalSourceSymbol:
@@ -9818,6 +10574,8 @@ const char *Attr::getSpelling() const {
     return cast<NoCommonAttr>(this)->getSpelling();
   case attr::NoDebug:
     return cast<NoDebugAttr>(this)->getSpelling();
+  case attr::NoDestroy:
+    return cast<NoDestroyAttr>(this)->getSpelling();
   case attr::NoDuplicate:
     return cast<NoDuplicateAttr>(this)->getSpelling();
   case attr::NoEscape:
@@ -9872,12 +10630,20 @@ const char *Attr::getSpelling() const {
     return cast<ObjCExceptionAttr>(this)->getSpelling();
   case attr::ObjCExplicitProtocolImpl:
     return cast<ObjCExplicitProtocolImplAttr>(this)->getSpelling();
+  case attr::ObjCGC:
+    return cast<ObjCGCAttr>(this)->getSpelling();
   case attr::ObjCIndependentClass:
     return cast<ObjCIndependentClassAttr>(this)->getSpelling();
+  case attr::ObjCInertUnsafeUnretained:
+    return cast<ObjCInertUnsafeUnretainedAttr>(this)->getSpelling();
+  case attr::ObjCKindOf:
+    return cast<ObjCKindOfAttr>(this)->getSpelling();
   case attr::ObjCMethodFamily:
     return cast<ObjCMethodFamilyAttr>(this)->getSpelling();
   case attr::ObjCNSObject:
     return cast<ObjCNSObjectAttr>(this)->getSpelling();
+  case attr::ObjCOwnership:
+    return cast<ObjCOwnershipAttr>(this)->getSpelling();
   case attr::ObjCPreciseLifetime:
     return cast<ObjCPreciseLifetimeAttr>(this)->getSpelling();
   case attr::ObjCRequiresPropertyDefs:
@@ -9896,10 +10662,20 @@ const char *Attr::getSpelling() const {
     return cast<ObjCSubclassingRestrictedAttr>(this)->getSpelling();
   case attr::OpenCLAccess:
     return cast<OpenCLAccessAttr>(this)->getSpelling();
+  case attr::OpenCLConstantAddressSpace:
+    return cast<OpenCLConstantAddressSpaceAttr>(this)->getSpelling();
+  case attr::OpenCLGenericAddressSpace:
+    return cast<OpenCLGenericAddressSpaceAttr>(this)->getSpelling();
+  case attr::OpenCLGlobalAddressSpace:
+    return cast<OpenCLGlobalAddressSpaceAttr>(this)->getSpelling();
   case attr::OpenCLIntelReqdSubGroupSize:
     return cast<OpenCLIntelReqdSubGroupSizeAttr>(this)->getSpelling();
   case attr::OpenCLKernel:
     return cast<OpenCLKernelAttr>(this)->getSpelling();
+  case attr::OpenCLLocalAddressSpace:
+    return cast<OpenCLLocalAddressSpaceAttr>(this)->getSpelling();
+  case attr::OpenCLPrivateAddressSpace:
+    return cast<OpenCLPrivateAddressSpaceAttr>(this)->getSpelling();
   case attr::OpenCLUnrollHint:
     return cast<OpenCLUnrollHintAttr>(this)->getSpelling();
   case attr::OptimizeNone:
@@ -9936,6 +10712,10 @@ const char *Attr::getSpelling() const {
     return cast<PtGuardedByAttr>(this)->getSpelling();
   case attr::PtGuardedVar:
     return cast<PtGuardedVarAttr>(this)->getSpelling();
+  case attr::Ptr32:
+    return cast<Ptr32Attr>(this)->getSpelling();
+  case attr::Ptr64:
+    return cast<Ptr64Attr>(this)->getSpelling();
   case attr::Pure:
     return cast<PureAttr>(this)->getSpelling();
   case attr::RISCVInterrupt:
@@ -9962,6 +10742,8 @@ const char *Attr::getSpelling() const {
     return cast<ReturnsNonNullAttr>(this)->getSpelling();
   case attr::ReturnsTwice:
     return cast<ReturnsTwiceAttr>(this)->getSpelling();
+  case attr::SPtr:
+    return cast<SPtrAttr>(this)->getSpelling();
   case attr::ScopedLockable:
     return cast<ScopedLockableAttr>(this)->getSpelling();
   case attr::Section:
@@ -10004,10 +10786,18 @@ const char *Attr::getSpelling() const {
     return cast<TrivialABIAttr>(this)->getSpelling();
   case attr::TryAcquireCapability:
     return cast<TryAcquireCapabilityAttr>(this)->getSpelling();
+  case attr::TypeNonNull:
+    return cast<TypeNonNullAttr>(this)->getSpelling();
+  case attr::TypeNullUnspecified:
+    return cast<TypeNullUnspecifiedAttr>(this)->getSpelling();
+  case attr::TypeNullable:
+    return cast<TypeNullableAttr>(this)->getSpelling();
   case attr::TypeTagForDatatype:
     return cast<TypeTagForDatatypeAttr>(this)->getSpelling();
   case attr::TypeVisibility:
     return cast<TypeVisibilityAttr>(this)->getSpelling();
+  case attr::UPtr:
+    return cast<UPtrAttr>(this)->getSpelling();
   case attr::Unavailable:
     return cast<UnavailableAttr>(this)->getSpelling();
   case attr::Unused:
@@ -10070,6 +10860,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<AcquiredAfterAttr>(this)->clone(C);
   case attr::AcquiredBefore:
     return cast<AcquiredBeforeAttr>(this)->clone(C);
+  case attr::AddressSpace:
+    return cast<AddressSpaceAttr>(this)->clone(C);
   case attr::Alias:
     return cast<AliasAttr>(this)->clone(C);
   case attr::AlignMac68k:
@@ -10082,6 +10874,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<AllocAlignAttr>(this)->clone(C);
   case attr::AllocSize:
     return cast<AllocSizeAttr>(this)->clone(C);
+  case attr::AlwaysDestroy:
+    return cast<AlwaysDestroyAttr>(this)->clone(C);
   case attr::AlwaysInline:
     return cast<AlwaysInlineAttr>(this)->clone(C);
   case attr::AnalyzerNoReturn:
@@ -10178,8 +10972,12 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<ConvergentAttr>(this)->clone(C);
   case attr::DLLExport:
     return cast<DLLExportAttr>(this)->clone(C);
+  case attr::DLLExportStaticLocal:
+    return cast<DLLExportStaticLocalAttr>(this)->clone(C);
   case attr::DLLImport:
     return cast<DLLImportAttr>(this)->clone(C);
+  case attr::DLLImportStaticLocal:
+    return cast<DLLImportStaticLocalAttr>(this)->clone(C);
   case attr::Deprecated:
     return cast<DeprecatedAttr>(this)->clone(C);
   case attr::Destructor:
@@ -10194,6 +10992,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<EnableIfAttr>(this)->clone(C);
   case attr::EnumExtensibility:
     return cast<EnumExtensibilityAttr>(this)->clone(C);
+  case attr::ExcludeFromExplicitInstantiation:
+    return cast<ExcludeFromExplicitInstantiationAttr>(this)->clone(C);
   case attr::ExclusiveTrylockFunction:
     return cast<ExclusiveTrylockFunctionAttr>(this)->clone(C);
   case attr::ExternalSourceSymbol:
@@ -10298,6 +11098,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<NoCommonAttr>(this)->clone(C);
   case attr::NoDebug:
     return cast<NoDebugAttr>(this)->clone(C);
+  case attr::NoDestroy:
+    return cast<NoDestroyAttr>(this)->clone(C);
   case attr::NoDuplicate:
     return cast<NoDuplicateAttr>(this)->clone(C);
   case attr::NoEscape:
@@ -10352,12 +11154,20 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<ObjCExceptionAttr>(this)->clone(C);
   case attr::ObjCExplicitProtocolImpl:
     return cast<ObjCExplicitProtocolImplAttr>(this)->clone(C);
+  case attr::ObjCGC:
+    return cast<ObjCGCAttr>(this)->clone(C);
   case attr::ObjCIndependentClass:
     return cast<ObjCIndependentClassAttr>(this)->clone(C);
+  case attr::ObjCInertUnsafeUnretained:
+    return cast<ObjCInertUnsafeUnretainedAttr>(this)->clone(C);
+  case attr::ObjCKindOf:
+    return cast<ObjCKindOfAttr>(this)->clone(C);
   case attr::ObjCMethodFamily:
     return cast<ObjCMethodFamilyAttr>(this)->clone(C);
   case attr::ObjCNSObject:
     return cast<ObjCNSObjectAttr>(this)->clone(C);
+  case attr::ObjCOwnership:
+    return cast<ObjCOwnershipAttr>(this)->clone(C);
   case attr::ObjCPreciseLifetime:
     return cast<ObjCPreciseLifetimeAttr>(this)->clone(C);
   case attr::ObjCRequiresPropertyDefs:
@@ -10376,10 +11186,20 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<ObjCSubclassingRestrictedAttr>(this)->clone(C);
   case attr::OpenCLAccess:
     return cast<OpenCLAccessAttr>(this)->clone(C);
+  case attr::OpenCLConstantAddressSpace:
+    return cast<OpenCLConstantAddressSpaceAttr>(this)->clone(C);
+  case attr::OpenCLGenericAddressSpace:
+    return cast<OpenCLGenericAddressSpaceAttr>(this)->clone(C);
+  case attr::OpenCLGlobalAddressSpace:
+    return cast<OpenCLGlobalAddressSpaceAttr>(this)->clone(C);
   case attr::OpenCLIntelReqdSubGroupSize:
     return cast<OpenCLIntelReqdSubGroupSizeAttr>(this)->clone(C);
   case attr::OpenCLKernel:
     return cast<OpenCLKernelAttr>(this)->clone(C);
+  case attr::OpenCLLocalAddressSpace:
+    return cast<OpenCLLocalAddressSpaceAttr>(this)->clone(C);
+  case attr::OpenCLPrivateAddressSpace:
+    return cast<OpenCLPrivateAddressSpaceAttr>(this)->clone(C);
   case attr::OpenCLUnrollHint:
     return cast<OpenCLUnrollHintAttr>(this)->clone(C);
   case attr::OptimizeNone:
@@ -10416,6 +11236,10 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<PtGuardedByAttr>(this)->clone(C);
   case attr::PtGuardedVar:
     return cast<PtGuardedVarAttr>(this)->clone(C);
+  case attr::Ptr32:
+    return cast<Ptr32Attr>(this)->clone(C);
+  case attr::Ptr64:
+    return cast<Ptr64Attr>(this)->clone(C);
   case attr::Pure:
     return cast<PureAttr>(this)->clone(C);
   case attr::RISCVInterrupt:
@@ -10442,6 +11266,8 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<ReturnsNonNullAttr>(this)->clone(C);
   case attr::ReturnsTwice:
     return cast<ReturnsTwiceAttr>(this)->clone(C);
+  case attr::SPtr:
+    return cast<SPtrAttr>(this)->clone(C);
   case attr::ScopedLockable:
     return cast<ScopedLockableAttr>(this)->clone(C);
   case attr::Section:
@@ -10484,10 +11310,18 @@ Attr *Attr::clone(ASTContext &C) const {
     return cast<TrivialABIAttr>(this)->clone(C);
   case attr::TryAcquireCapability:
     return cast<TryAcquireCapabilityAttr>(this)->clone(C);
+  case attr::TypeNonNull:
+    return cast<TypeNonNullAttr>(this)->clone(C);
+  case attr::TypeNullUnspecified:
+    return cast<TypeNullUnspecifiedAttr>(this)->clone(C);
+  case attr::TypeNullable:
+    return cast<TypeNullableAttr>(this)->clone(C);
   case attr::TypeTagForDatatype:
     return cast<TypeTagForDatatypeAttr>(this)->clone(C);
   case attr::TypeVisibility:
     return cast<TypeVisibilityAttr>(this)->clone(C);
+  case attr::UPtr:
+    return cast<UPtrAttr>(this)->clone(C);
   case attr::Unavailable:
     return cast<UnavailableAttr>(this)->clone(C);
   case attr::Unused:
@@ -10550,6 +11384,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<AcquiredAfterAttr>(this)->printPretty(OS, Policy);
   case attr::AcquiredBefore:
     return cast<AcquiredBeforeAttr>(this)->printPretty(OS, Policy);
+  case attr::AddressSpace:
+    return cast<AddressSpaceAttr>(this)->printPretty(OS, Policy);
   case attr::Alias:
     return cast<AliasAttr>(this)->printPretty(OS, Policy);
   case attr::AlignMac68k:
@@ -10562,6 +11398,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<AllocAlignAttr>(this)->printPretty(OS, Policy);
   case attr::AllocSize:
     return cast<AllocSizeAttr>(this)->printPretty(OS, Policy);
+  case attr::AlwaysDestroy:
+    return cast<AlwaysDestroyAttr>(this)->printPretty(OS, Policy);
   case attr::AlwaysInline:
     return cast<AlwaysInlineAttr>(this)->printPretty(OS, Policy);
   case attr::AnalyzerNoReturn:
@@ -10658,8 +11496,12 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<ConvergentAttr>(this)->printPretty(OS, Policy);
   case attr::DLLExport:
     return cast<DLLExportAttr>(this)->printPretty(OS, Policy);
+  case attr::DLLExportStaticLocal:
+    return cast<DLLExportStaticLocalAttr>(this)->printPretty(OS, Policy);
   case attr::DLLImport:
     return cast<DLLImportAttr>(this)->printPretty(OS, Policy);
+  case attr::DLLImportStaticLocal:
+    return cast<DLLImportStaticLocalAttr>(this)->printPretty(OS, Policy);
   case attr::Deprecated:
     return cast<DeprecatedAttr>(this)->printPretty(OS, Policy);
   case attr::Destructor:
@@ -10674,6 +11516,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<EnableIfAttr>(this)->printPretty(OS, Policy);
   case attr::EnumExtensibility:
     return cast<EnumExtensibilityAttr>(this)->printPretty(OS, Policy);
+  case attr::ExcludeFromExplicitInstantiation:
+    return cast<ExcludeFromExplicitInstantiationAttr>(this)->printPretty(OS, Policy);
   case attr::ExclusiveTrylockFunction:
     return cast<ExclusiveTrylockFunctionAttr>(this)->printPretty(OS, Policy);
   case attr::ExternalSourceSymbol:
@@ -10778,6 +11622,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<NoCommonAttr>(this)->printPretty(OS, Policy);
   case attr::NoDebug:
     return cast<NoDebugAttr>(this)->printPretty(OS, Policy);
+  case attr::NoDestroy:
+    return cast<NoDestroyAttr>(this)->printPretty(OS, Policy);
   case attr::NoDuplicate:
     return cast<NoDuplicateAttr>(this)->printPretty(OS, Policy);
   case attr::NoEscape:
@@ -10832,12 +11678,20 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<ObjCExceptionAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCExplicitProtocolImpl:
     return cast<ObjCExplicitProtocolImplAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCGC:
+    return cast<ObjCGCAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCIndependentClass:
     return cast<ObjCIndependentClassAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCInertUnsafeUnretained:
+    return cast<ObjCInertUnsafeUnretainedAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCKindOf:
+    return cast<ObjCKindOfAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCMethodFamily:
     return cast<ObjCMethodFamilyAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCNSObject:
     return cast<ObjCNSObjectAttr>(this)->printPretty(OS, Policy);
+  case attr::ObjCOwnership:
+    return cast<ObjCOwnershipAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCPreciseLifetime:
     return cast<ObjCPreciseLifetimeAttr>(this)->printPretty(OS, Policy);
   case attr::ObjCRequiresPropertyDefs:
@@ -10856,10 +11710,20 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<ObjCSubclassingRestrictedAttr>(this)->printPretty(OS, Policy);
   case attr::OpenCLAccess:
     return cast<OpenCLAccessAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLConstantAddressSpace:
+    return cast<OpenCLConstantAddressSpaceAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLGenericAddressSpace:
+    return cast<OpenCLGenericAddressSpaceAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLGlobalAddressSpace:
+    return cast<OpenCLGlobalAddressSpaceAttr>(this)->printPretty(OS, Policy);
   case attr::OpenCLIntelReqdSubGroupSize:
     return cast<OpenCLIntelReqdSubGroupSizeAttr>(this)->printPretty(OS, Policy);
   case attr::OpenCLKernel:
     return cast<OpenCLKernelAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLLocalAddressSpace:
+    return cast<OpenCLLocalAddressSpaceAttr>(this)->printPretty(OS, Policy);
+  case attr::OpenCLPrivateAddressSpace:
+    return cast<OpenCLPrivateAddressSpaceAttr>(this)->printPretty(OS, Policy);
   case attr::OpenCLUnrollHint:
     return cast<OpenCLUnrollHintAttr>(this)->printPretty(OS, Policy);
   case attr::OptimizeNone:
@@ -10896,6 +11760,10 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<PtGuardedByAttr>(this)->printPretty(OS, Policy);
   case attr::PtGuardedVar:
     return cast<PtGuardedVarAttr>(this)->printPretty(OS, Policy);
+  case attr::Ptr32:
+    return cast<Ptr32Attr>(this)->printPretty(OS, Policy);
+  case attr::Ptr64:
+    return cast<Ptr64Attr>(this)->printPretty(OS, Policy);
   case attr::Pure:
     return cast<PureAttr>(this)->printPretty(OS, Policy);
   case attr::RISCVInterrupt:
@@ -10922,6 +11790,8 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<ReturnsNonNullAttr>(this)->printPretty(OS, Policy);
   case attr::ReturnsTwice:
     return cast<ReturnsTwiceAttr>(this)->printPretty(OS, Policy);
+  case attr::SPtr:
+    return cast<SPtrAttr>(this)->printPretty(OS, Policy);
   case attr::ScopedLockable:
     return cast<ScopedLockableAttr>(this)->printPretty(OS, Policy);
   case attr::Section:
@@ -10964,10 +11834,18 @@ void Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
     return cast<TrivialABIAttr>(this)->printPretty(OS, Policy);
   case attr::TryAcquireCapability:
     return cast<TryAcquireCapabilityAttr>(this)->printPretty(OS, Policy);
+  case attr::TypeNonNull:
+    return cast<TypeNonNullAttr>(this)->printPretty(OS, Policy);
+  case attr::TypeNullUnspecified:
+    return cast<TypeNullUnspecifiedAttr>(this)->printPretty(OS, Policy);
+  case attr::TypeNullable:
+    return cast<TypeNullableAttr>(this)->printPretty(OS, Policy);
   case attr::TypeTagForDatatype:
     return cast<TypeTagForDatatypeAttr>(this)->printPretty(OS, Policy);
   case attr::TypeVisibility:
     return cast<TypeVisibilityAttr>(this)->printPretty(OS, Policy);
+  case attr::UPtr:
+    return cast<UPtrAttr>(this)->printPretty(OS, Policy);
   case attr::Unavailable:
     return cast<UnavailableAttr>(this)->printPretty(OS, Policy);
   case attr::Unused:

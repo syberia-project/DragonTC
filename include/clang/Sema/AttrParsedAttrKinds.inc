@@ -448,7 +448,7 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
       return ParsedAttr::AT_VecReturn;	 // "vecreturn"
     }
     break;
-  case 10:	 // 14 strings to match.
+  case 10:	 // 15 strings to match.
     switch (Name[0]) {
     default: break;
     case 'a':	 // 2 strings to match.
@@ -520,10 +520,21 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
         return ParsedAttr::AT_GuardedBy;	 // "guarded_by"
       }
       break;
-    case 'n':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "ocf_check", 9) != 0)
+    case 'n':	 // 2 strings to match.
+      if (Name[1] != 'o')
         break;
-      return ParsedAttr::AT_AnyX86NoCfCheck;	 // "nocf_check"
+      switch (Name[2]) {
+      default: break;
+      case '_':	 // 1 string to match.
+        if (memcmp(Name.data()+3, "destroy", 7) != 0)
+          break;
+        return ParsedAttr::AT_NoDestroy;	 // "no_destroy"
+      case 'c':	 // 1 string to match.
+        if (memcmp(Name.data()+3, "f_check", 7) != 0)
+          break;
+        return ParsedAttr::AT_AnyX86NoCfCheck;	 // "nocf_check"
+      }
+      break;
     case 's':	 // 1 string to match.
       if (memcmp(Name.data()+1, "hort_call", 9) != 0)
         break;
@@ -772,16 +783,20 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
       return ParsedAttr::AT_XRayLogArgs;	 // "xray_log_args"
     }
     break;
-  case 14:	 // 11 strings to match.
+  case 14:	 // 12 strings to match.
     switch (Name[0]) {
     default: break;
-    case 'a':	 // 2 strings to match.
+    case 'a':	 // 3 strings to match.
       switch (Name[1]) {
       default: break;
       case 'c':	 // 1 string to match.
         if (memcmp(Name.data()+2, "quired_after", 12) != 0)
           break;
         return ParsedAttr::AT_AcquiredAfter;	 // "acquired_after"
+      case 'l':	 // 1 string to match.
+        if (memcmp(Name.data()+2, "ways_destroy", 12) != 0)
+          break;
+        return ParsedAttr::AT_AlwaysDestroy;	 // "always_destroy"
       case 's':	 // 1 string to match.
         if (memcmp(Name.data()+2, "sume_aligned", 12) != 0)
           break;
@@ -1411,10 +1426,19 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
     if (memcmp(Name.data()+0, "objc_requires_property_definitions", 34) != 0)
       break;
     return ParsedAttr::AT_ObjCRequiresPropertyDefs;	 // "objc_requires_property_definitions"
-  case 35:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "objc_arc_weak_reference_unavailable", 35) != 0)
-      break;
-    return ParsedAttr::AT_ArcWeakrefUnavailable;	 // "objc_arc_weak_reference_unavailable"
+  case 35:	 // 2 strings to match.
+    switch (Name[0]) {
+    default: break;
+    case 'e':	 // 1 string to match.
+      if (memcmp(Name.data()+1, "xclude_from_explicit_instantiation", 34) != 0)
+        break;
+      return ParsedAttr::AT_ExcludeFromExplicitInstantiation;	 // "exclude_from_explicit_instantiation"
+    case 'o':	 // 1 string to match.
+      if (memcmp(Name.data()+1, "bjc_arc_weak_reference_unavailable", 34) != 0)
+        break;
+      return ParsedAttr::AT_ArcWeakrefUnavailable;	 // "objc_arc_weak_reference_unavailable"
+    }
+    break;
   case 46:	 // 1 string to match.
     if (memcmp(Name.data()+0, "objc_protocol_requires_explicit_implementation", 46) != 0)
       break;
@@ -1559,10 +1583,30 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
     if (memcmp(Name.data()+0, "empty_bases", 11) != 0)
       break;
     return ParsedAttr::AT_EmptyBases;	 // "empty_bases"
-  case 12:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "__constant__", 12) != 0)
+  case 12:	 // 3 strings to match.
+    switch (Name[0]) {
+    default: break;
+    case '_':	 // 1 string to match.
+      if (memcmp(Name.data()+1, "_constant__", 11) != 0)
+        break;
+      return ParsedAttr::AT_CUDAConstant;	 // "__constant__"
+    case 'c':	 // 2 strings to match.
+      if (memcmp(Name.data()+1, "pu_", 3) != 0)
+        break;
+      switch (Name[4]) {
+      default: break;
+      case 'd':	 // 1 string to match.
+        if (memcmp(Name.data()+5, "ispatch", 7) != 0)
+          break;
+        return ParsedAttr::AT_CPUDispatch;	 // "cpu_dispatch"
+      case 's':	 // 1 string to match.
+        if (memcmp(Name.data()+5, "pecific", 7) != 0)
+          break;
+        return ParsedAttr::AT_CPUSpecific;	 // "cpu_specific"
+      }
       break;
-    return ParsedAttr::AT_CUDAConstant;	 // "__constant__"
+    }
+    break;
   case 14:	 // 1 string to match.
     if (memcmp(Name.data()+0, "layout_version", 14) != 0)
       break;
@@ -2170,7 +2214,7 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
       break;
     }
     break;
-  case 17:	 // 4 strings to match.
+  case 17:	 // 5 strings to match.
     if (memcmp(Name.data()+0, "clang::", 7) != 0)
       break;
     switch (Name[7]) {
@@ -2199,6 +2243,10 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
         break;
       }
       break;
+    case 'n':	 // 1 string to match.
+      if (memcmp(Name.data()+8, "o_destroy", 9) != 0)
+        break;
+      return ParsedAttr::AT_NoDestroy;	 // "clang::no_destroy"
     case 'v':	 // 1 string to match.
       if (memcmp(Name.data()+8, "ectorcall", 9) != 0)
         break;
@@ -2406,11 +2454,15 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
       return ParsedAttr::AT_ReturnsNonNull;	 // "gnu::returns_nonnull"
     }
     break;
-  case 21:	 // 5 strings to match.
+  case 21:	 // 6 strings to match.
     if (memcmp(Name.data()+0, "clang::", 7) != 0)
       break;
     switch (Name[7]) {
     default: break;
+    case 'a':	 // 1 string to match.
+      if (memcmp(Name.data()+8, "lways_destroy", 13) != 0)
+        break;
+      return ParsedAttr::AT_AlwaysDestroy;	 // "clang::always_destroy"
     case 'i':	 // 1 string to match.
       if (memcmp(Name.data()+8, "ntel_ocl_bicc", 13) != 0)
         break;
@@ -2976,10 +3028,21 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
     if (memcmp(Name.data()+0, "clang::objc_requires_property_definitions", 41) != 0)
       break;
     return ParsedAttr::AT_ObjCRequiresPropertyDefs;	 // "clang::objc_requires_property_definitions"
-  case 42:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "clang::objc_arc_weak_reference_unavailable", 42) != 0)
+  case 42:	 // 2 strings to match.
+    if (memcmp(Name.data()+0, "clang::", 7) != 0)
       break;
-    return ParsedAttr::AT_ArcWeakrefUnavailable;	 // "clang::objc_arc_weak_reference_unavailable"
+    switch (Name[7]) {
+    default: break;
+    case 'e':	 // 1 string to match.
+      if (memcmp(Name.data()+8, "xclude_from_explicit_instantiation", 34) != 0)
+        break;
+      return ParsedAttr::AT_ExcludeFromExplicitInstantiation;	 // "clang::exclude_from_explicit_instantiation"
+    case 'o':	 // 1 string to match.
+      if (memcmp(Name.data()+8, "bjc_arc_weak_reference_unavailable", 34) != 0)
+        break;
+      return ParsedAttr::AT_ArcWeakrefUnavailable;	 // "clang::objc_arc_weak_reference_unavailable"
+    }
+    break;
   case 53:	 // 1 string to match.
     if (memcmp(Name.data()+0, "clang::objc_protocol_requires_explicit_implementation", 53) != 0)
       break;
@@ -3549,10 +3612,21 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
     if (memcmp(Name.data()+0, "clang::objc_requires_property_definitions", 41) != 0)
       break;
     return ParsedAttr::AT_ObjCRequiresPropertyDefs;	 // "clang::objc_requires_property_definitions"
-  case 42:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "clang::objc_arc_weak_reference_unavailable", 42) != 0)
+  case 42:	 // 2 strings to match.
+    if (memcmp(Name.data()+0, "clang::", 7) != 0)
       break;
-    return ParsedAttr::AT_ArcWeakrefUnavailable;	 // "clang::objc_arc_weak_reference_unavailable"
+    switch (Name[7]) {
+    default: break;
+    case 'e':	 // 1 string to match.
+      if (memcmp(Name.data()+8, "xclude_from_explicit_instantiation", 34) != 0)
+        break;
+      return ParsedAttr::AT_ExcludeFromExplicitInstantiation;	 // "clang::exclude_from_explicit_instantiation"
+    case 'o':	 // 1 string to match.
+      if (memcmp(Name.data()+8, "bjc_arc_weak_reference_unavailable", 34) != 0)
+        break;
+      return ParsedAttr::AT_ArcWeakrefUnavailable;	 // "clang::objc_arc_weak_reference_unavailable"
+    }
+    break;
   case 53:	 // 1 string to match.
     if (memcmp(Name.data()+0, "clang::objc_protocol_requires_explicit_implementation", 53) != 0)
       break;
@@ -3836,6 +3910,10 @@ static ParsedAttr::Kind getAttrKind(StringRef Name, ParsedAttr::Syntax Syntax) {
     if (memcmp(Name.data()+0, "_Null_unspecified", 17) != 0)
       break;
     return ParsedAttr::AT_TypeNullUnspecified;	 // "_Null_unspecified"
+  case 19:	 // 1 string to match.
+    if (memcmp(Name.data()+0, "__unsafe_unretained", 19) != 0)
+      break;
+    return ParsedAttr::AT_ObjCInertUnsafeUnretained;	 // "__unsafe_unretained"
   case 20:	 // 1 string to match.
     if (memcmp(Name.data()+0, "__single_inheritance", 20) != 0)
       break;

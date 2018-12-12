@@ -129,6 +129,13 @@
         return 1;
     break;
   }
+  case AT_AlwaysDestroy: {
+    if (Name == "always_destroy" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "always_destroy" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
+    break;
+  }
   case AT_AlwaysInline: {
     if (Name == "always_inline" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -306,6 +313,8 @@
         return 1;
     if (Name == "cpu_dispatch" && SyntaxUsed == 2 && Scope == "clang")
         return 2;
+    if (Name == "cpu_dispatch" && SyntaxUsed == 3 && Scope == "")
+        return 3;
     break;
   }
   case AT_CPUSpecific: {
@@ -315,6 +324,8 @@
         return 1;
     if (Name == "cpu_specific" && SyntaxUsed == 2 && Scope == "clang")
         return 2;
+    if (Name == "cpu_specific" && SyntaxUsed == 3 && Scope == "")
+        return 3;
     break;
   }
   case AT_CUDAConstant: {
@@ -475,6 +486,9 @@
         return 2;
     break;
   }
+  case AT_DLLExportStaticLocal: {
+    break;
+  }
   case AT_DLLImport: {
     if (Name == "dllimport" && SyntaxUsed == 3 && Scope == "")
         return 0;
@@ -482,6 +496,9 @@
         return 1;
     if (Name == "dllimport" && SyntaxUsed == 1 && Scope == "gnu")
         return 2;
+    break;
+  }
+  case AT_DLLImportStaticLocal: {
     break;
   }
   case AT_Deprecated: {
@@ -534,6 +551,15 @@
     if (Name == "enum_extensibility" && SyntaxUsed == 1 && Scope == "clang")
         return 1;
     if (Name == "enum_extensibility" && SyntaxUsed == 2 && Scope == "clang")
+        return 2;
+    break;
+  }
+  case AT_ExcludeFromExplicitInstantiation: {
+    if (Name == "exclude_from_explicit_instantiation" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "exclude_from_explicit_instantiation" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
+    if (Name == "exclude_from_explicit_instantiation" && SyntaxUsed == 2 && Scope == "clang")
         return 2;
     break;
   }
@@ -927,6 +953,13 @@
         return 1;
     break;
   }
+  case AT_NoDestroy: {
+    if (Name == "no_destroy" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "no_destroy" && SyntaxUsed == 1 && Scope == "clang")
+        return 1;
+    break;
+  }
   case AT_NoDuplicate: {
     if (Name == "noduplicate" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -1143,6 +1176,11 @@
         return 1;
     if (Name == "objc_independent_class" && SyntaxUsed == 2 && Scope == "clang")
         return 2;
+    break;
+  }
+  case AT_ObjCInertUnsafeUnretained: {
+    if (Name == "__unsafe_unretained" && SyntaxUsed == 5 && Scope == "")
+        return 0;
     break;
   }
   case AT_ObjCKindOf: {

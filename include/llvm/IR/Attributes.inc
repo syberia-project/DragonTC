@@ -47,6 +47,7 @@ SanitizeMemory,
 SanitizeThread,
 ShadowCallStack,
 Speculatable,
+SpeculativeLoadHardening,
 StackAlignment,
 StackProtect,
 StackProtectReq,
@@ -110,6 +111,7 @@ static Attribute::AttrKind getAttrKindFromName(StringRef AttrName) {
     .Case("sanitize_thread", Attribute::SanitizeThread)
     .Case("shadowcallstack", Attribute::ShadowCallStack)
     .Case("speculatable", Attribute::Speculatable)
+    .Case("speculative_load_hardening", Attribute::SpeculativeLoadHardening)
     .Case("alignstack", Attribute::StackAlignment)
     .Case("ssp", Attribute::StackProtect)
     .Case("sspreq", Attribute::StackProtectReq)
@@ -391,6 +393,11 @@ struct SpeculatableAttr : EnumAttr {
     return llvm::Attribute::Speculatable;
   }
 };
+struct SpeculativeLoadHardeningAttr : EnumAttr {
+  static enum Attribute::AttrKind getKind() {
+    return llvm::Attribute::SpeculativeLoadHardening;
+  }
+};
 struct StackAlignmentAttr : EnumAttr {
   static enum Attribute::AttrKind getKind() {
     return llvm::Attribute::StackAlignment;
@@ -498,6 +505,7 @@ static inline void mergeFnAttrs(Function &Caller,
   setOR<NoImplicitFloatAttr>(Caller, Callee);
   setOR<NoJumpTablesAttr>(Caller, Callee);
   setOR<ProfileSampleAccurateAttr>(Caller, Callee);
+  setOR<SpeculativeLoadHardeningAttr>(Caller, Callee);
   adjustCallerSSPLevel(Caller, Callee);
   adjustCallerStackProbes(Caller, Callee);
   adjustCallerStackProbeSize(Caller, Callee);

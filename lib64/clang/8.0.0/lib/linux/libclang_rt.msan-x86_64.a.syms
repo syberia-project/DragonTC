@@ -92,6 +92,7 @@
   __interceptor_asctime;
   __interceptor_asctime_r;
   __interceptor_asprintf;
+  __interceptor_atexit;
   __interceptor_backtrace;
   __interceptor_backtrace_symbols;
   __interceptor_bcopy;
@@ -1317,6 +1318,7 @@
   asctime;
   asctime_r;
   asprintf;
+  atexit;
   backtrace;
   backtrace_symbols;
   bcopy;

@@ -63,10 +63,12 @@
   __interceptor_fclose;
   __interceptor_fdopen;
   __interceptor_fflush;
+  __interceptor_fgets;
   __interceptor_fgetxattr;
   __interceptor_flistxattr;
   __interceptor_fopen;
   __interceptor_fprintf;
+  __interceptor_fputs;
   __interceptor_fread;
   __interceptor_free;
   __interceptor_freopen;
@@ -171,6 +173,7 @@
   __interceptor_pthread_rwlockattr_getpshared;
   __interceptor_pthread_setcancelstate;
   __interceptor_pthread_setcanceltype;
+  __interceptor_puts;
   __interceptor_pvalloc;
   __interceptor_pwrite;
   __interceptor_read;
@@ -279,6 +282,7 @@
   __libc_memalign;
   __lsan_*;
   __sancov_*;
+  __sanitizer_acquire_crash_state;
   __sanitizer_annotate_contiguous_container;
   __sanitizer_contiguous_container_find_bad_address;
   __sanitizer_cov_8bit_counters_init;
@@ -1022,10 +1026,12 @@
   fclose;
   fdopen;
   fflush;
+  fgets;
   fgetxattr;
   flistxattr;
   fopen;
   fprintf;
+  fputs;
   fread;
   free;
   freopen;
@@ -1129,6 +1135,7 @@
   pthread_rwlockattr_getpshared;
   pthread_setcancelstate;
   pthread_setcanceltype;
+  puts;
   pvalloc;
   pwrite;
   read;

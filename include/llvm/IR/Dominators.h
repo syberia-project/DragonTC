@@ -37,15 +37,18 @@ extern template class DomTreeNodeBase<BasicBlock>;
 extern template class DominatorTreeBase<BasicBlock, false>; // DomTree
 extern template class DominatorTreeBase<BasicBlock, true>; // PostDomTree
 
+extern template class cfg::Update<BasicBlock *>;
+
 namespace DomTreeBuilder {
 using BBDomTree = DomTreeBase<BasicBlock>;
 using BBPostDomTree = PostDomTreeBase<BasicBlock>;
 
-extern template struct Update<BasicBlock *>;
-
-using BBUpdates = ArrayRef<Update<BasicBlock *>>;
+using BBUpdates = ArrayRef<llvm::cfg::Update<BasicBlock *>>;
 
 extern template void Calculate<BBDomTree>(BBDomTree &DT);
+extern template void CalculateWithUpdates<BBDomTree>(BBDomTree &DT,
+                                                     BBUpdates U);
+
 extern template void Calculate<BBPostDomTree>(BBPostDomTree &DT);
 
 extern template void InsertEdge<BBDomTree>(BBDomTree &DT, BasicBlock *From,
@@ -145,6 +148,9 @@ class DominatorTree : public DominatorTreeBase<BasicBlock, false> {
 
   DominatorTree() = default;
   explicit DominatorTree(Function &F) { recalculate(F); }
+  explicit DominatorTree(DominatorTree &DT, DomTreeBuilder::BBUpdates U) {
+    recalculate(*DT.Parent, U);
+  }
 
   /// Handle invalidation explicitly.
   bool invalidate(Function &F, const PreservedAnalyses &PA,

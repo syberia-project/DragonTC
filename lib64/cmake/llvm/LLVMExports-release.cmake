@@ -344,6 +344,16 @@ set_target_properties(LLVMOption PROPERTIES
 list(APPEND _IMPORT_CHECK_TARGETS LLVMOption )
 list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMOption "${_IMPORT_PREFIX}/lib64/libLLVMOption.a" )
 
+# Import target "LLVMOptRemarks" for configuration "Release"
+set_property(TARGET LLVMOptRemarks APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMOptRemarks PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMOptRemarks.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMOptRemarks )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMOptRemarks "${_IMPORT_PREFIX}/lib64/libLLVMOptRemarks.a" )
+
 # Import target "LLVMDebugInfoDWARF" for configuration "Release"
 set_property(TARGET LLVMDebugInfoDWARF APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(LLVMDebugInfoDWARF PROPERTIES
@@ -593,6 +603,66 @@ set_target_properties(LLVMARMUtils PROPERTIES
 
 list(APPEND _IMPORT_CHECK_TARGETS LLVMARMUtils )
 list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMARMUtils "${_IMPORT_PREFIX}/lib64/libLLVMARMUtils.a" )
+
+# Import target "LLVMBPFCodeGen" for configuration "Release"
+set_property(TARGET LLVMBPFCodeGen APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMBPFCodeGen PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMBPFCodeGen.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMBPFCodeGen )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMBPFCodeGen "${_IMPORT_PREFIX}/lib64/libLLVMBPFCodeGen.a" )
+
+# Import target "LLVMBPFAsmParser" for configuration "Release"
+set_property(TARGET LLVMBPFAsmParser APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMBPFAsmParser PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMBPFAsmParser.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMBPFAsmParser )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMBPFAsmParser "${_IMPORT_PREFIX}/lib64/libLLVMBPFAsmParser.a" )
+
+# Import target "LLVMBPFDisassembler" for configuration "Release"
+set_property(TARGET LLVMBPFDisassembler APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMBPFDisassembler PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMBPFDisassembler.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMBPFDisassembler )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMBPFDisassembler "${_IMPORT_PREFIX}/lib64/libLLVMBPFDisassembler.a" )
+
+# Import target "LLVMBPFAsmPrinter" for configuration "Release"
+set_property(TARGET LLVMBPFAsmPrinter APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMBPFAsmPrinter PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMBPFAsmPrinter.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMBPFAsmPrinter )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMBPFAsmPrinter "${_IMPORT_PREFIX}/lib64/libLLVMBPFAsmPrinter.a" )
+
+# Import target "LLVMBPFDesc" for configuration "Release"
+set_property(TARGET LLVMBPFDesc APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMBPFDesc PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMBPFDesc.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMBPFDesc )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMBPFDesc "${_IMPORT_PREFIX}/lib64/libLLVMBPFDesc.a" )
+
+# Import target "LLVMBPFInfo" for configuration "Release"
+set_property(TARGET LLVMBPFInfo APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(LLVMBPFInfo PROPERTIES
+  IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "CXX"
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libLLVMBPFInfo.a"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS LLVMBPFInfo )
+list(APPEND _IMPORT_CHECK_FILES_FOR_LLVMBPFInfo "${_IMPORT_PREFIX}/lib64/libLLVMBPFInfo.a" )
 
 # Import target "LLVMX86CodeGen" for configuration "Release"
 set_property(TARGET LLVMX86CodeGen APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
@@ -876,6 +946,16 @@ set_target_properties(obj2yaml PROPERTIES
 
 list(APPEND _IMPORT_CHECK_TARGETS obj2yaml )
 list(APPEND _IMPORT_CHECK_FILES_FOR_obj2yaml "${_IMPORT_PREFIX}/bin/obj2yaml" )
+
+# Import target "OptRemarks" for configuration "Release"
+set_property(TARGET OptRemarks APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(OptRemarks PROPERTIES
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib64/libOptRemarks.so.8svn"
+  IMPORTED_SONAME_RELEASE "libOptRemarks.so.8svn"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS OptRemarks )
+list(APPEND _IMPORT_CHECK_FILES_FOR_OptRemarks "${_IMPORT_PREFIX}/lib64/libOptRemarks.so.8svn" )
 
 # Import target "llvm-opt-report" for configuration "Release"
 set_property(TARGET llvm-opt-report APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
@@ -1174,6 +1254,15 @@ set_target_properties(llvm-cxxfilt PROPERTIES
 
 list(APPEND _IMPORT_CHECK_TARGETS llvm-cxxfilt )
 list(APPEND _IMPORT_CHECK_FILES_FOR_llvm-cxxfilt "${_IMPORT_PREFIX}/bin/llvm-cxxfilt" )
+
+# Import target "llvm-cxxmap" for configuration "Release"
+set_property(TARGET llvm-cxxmap APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+set_target_properties(llvm-cxxmap PROPERTIES
+  IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/bin/llvm-cxxmap"
+  )
+
+list(APPEND _IMPORT_CHECK_TARGETS llvm-cxxmap )
+list(APPEND _IMPORT_CHECK_FILES_FOR_llvm-cxxmap "${_IMPORT_PREFIX}/bin/llvm-cxxmap" )
 
 # Import target "llvm-link" for configuration "Release"
 set_property(TARGET llvm-link APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)

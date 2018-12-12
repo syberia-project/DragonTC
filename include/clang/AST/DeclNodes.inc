@@ -517,6 +517,12 @@ DECL_RANGE(Named, Label, UnresolvedUsingValue)
 
 #undef NAMED
 
+#ifndef OMPREQUIRES
+#  define OMPREQUIRES(Type, Base) DECL(Type, Base)
+#endif
+OMPREQUIRES(OMPRequires, Decl)
+#undef OMPREQUIRES
+
 #ifndef OMPTHREADPRIVATE
 #  define OMPTHREADPRIVATE(Type, Base) DECL(Type, Base)
 #endif

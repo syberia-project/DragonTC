@@ -52,11 +52,13 @@
   __interceptor_fclose;
   __interceptor_fdopen;
   __interceptor_fflush;
+  __interceptor_fgets;
   __interceptor_fgetxattr;
   __interceptor_flistxattr;
   __interceptor_fopen;
   __interceptor_fork;
   __interceptor_fprintf;
+  __interceptor_fputs;
   __interceptor_fread;
   __interceptor_free;
   __interceptor_freopen;
@@ -317,6 +319,7 @@
   __interceptor_write;
   __interceptor_writev;
   __libc_memalign;
+  __sanitizer_acquire_crash_state;
   __sanitizer_cov_8bit_counters_init;
   __sanitizer_cov_dump;
   __sanitizer_cov_pcs_init;
@@ -1050,11 +1053,13 @@
   fclose;
   fdopen;
   fflush;
+  fgets;
   fgetxattr;
   flistxattr;
   fopen;
   fork;
   fprintf;
+  fputs;
   fread;
   free;
   freopen;

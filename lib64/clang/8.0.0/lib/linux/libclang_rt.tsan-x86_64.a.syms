@@ -113,6 +113,8 @@
   __interceptor_fclose;
   __interceptor_fdopen;
   __interceptor_fflush;
+  __interceptor_fgetgrent_r;
+  __interceptor_fgetpwent_r;
   __interceptor_fgets;
   __interceptor_fgetxattr;
   __interceptor_flistxattr;
@@ -1312,6 +1314,8 @@
   fclose;
   fdopen;
   fflush;
+  fgetgrent_r;
+  fgetpwent_r;
   fgets;
   fgetxattr;
   flistxattr;

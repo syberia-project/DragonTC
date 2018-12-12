@@ -193,10 +193,12 @@ LIBCLANG_RT_ASAN {
     fclose;
     fdopen;
     fflush;
+    fgets;
     fgetxattr;
     flistxattr;
     fopen;
     fprintf;
+    fputs;
     fread;
     free;
     freopen;
@@ -277,10 +279,12 @@ LIBCLANG_RT_ASAN {
     __interceptor_fclose;
     __interceptor_fdopen;
     __interceptor_fflush;
+    __interceptor_fgets;
     __interceptor_fgetxattr;
     __interceptor_flistxattr;
     __interceptor_fopen;
     __interceptor_fprintf;
+    __interceptor_fputs;
     __interceptor_fread;
     __interceptor_free;
     __interceptor_freopen;
@@ -387,6 +391,7 @@ LIBCLANG_RT_ASAN {
     __interceptor_pthread_rwlockattr_getpshared;
     __interceptor_pthread_setcancelstate;
     __interceptor_pthread_setcanceltype;
+    __interceptor_puts;
     __interceptor_pvalloc;
     __interceptor_pwrite;
     __interceptor_read;
@@ -570,6 +575,7 @@ LIBCLANG_RT_ASAN {
     pthread_rwlockattr_getpshared;
     pthread_setcancelstate;
     pthread_setcanceltype;
+    puts;
     pvalloc;
     pwrite;
     read;
@@ -588,6 +594,7 @@ LIBCLANG_RT_ASAN {
     remquof;
     remquol;
     __sancov_default_options;
+    __sanitizer_acquire_crash_state;
     __sanitizer_annotate_contiguous_container;
     __sanitizer_contiguous_container_find_bad_address;
     __sanitizer_cov_8bit_counters_init;
@@ -1368,6 +1375,7 @@ LIBCLANG_RT_ASAN {
     tmpnam;
     ttyname_r;
     __ubsan_default_options;
+    __ubsan_get_current_report_data;
     __ubsan_handle_add_overflow;
     __ubsan_handle_add_overflow_abort;
     __ubsan_handle_builtin_unreachable;
@@ -1382,6 +1390,8 @@ LIBCLANG_RT_ASAN {
     __ubsan_handle_float_cast_overflow_abort;
     __ubsan_handle_function_type_mismatch;
     __ubsan_handle_function_type_mismatch_abort;
+    __ubsan_handle_implicit_conversion;
+    __ubsan_handle_implicit_conversion_abort;
     __ubsan_handle_invalid_builtin;
     __ubsan_handle_invalid_builtin_abort;
     __ubsan_handle_load_invalid_value;
@@ -1411,6 +1421,7 @@ LIBCLANG_RT_ASAN {
     __ubsan_handle_type_mismatch_v1_abort;
     __ubsan_handle_vla_bound_not_positive;
     __ubsan_handle_vla_bound_not_positive_abort;
+    __ubsan_on_report;
     __ubsan_vptr_type_cache;
     _Unwind_RaiseException;
     valloc;

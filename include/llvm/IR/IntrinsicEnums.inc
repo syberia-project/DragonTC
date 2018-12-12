@@ -71,11 +71,13 @@
     exp,                                       // llvm.exp
     exp2,                                      // llvm.exp2
     expect,                                    // llvm.expect
+    experimental_constrained_ceil,             // llvm.experimental.constrained.ceil
     experimental_constrained_cos,              // llvm.experimental.constrained.cos
     experimental_constrained_exp,              // llvm.experimental.constrained.exp
     experimental_constrained_exp2,             // llvm.experimental.constrained.exp2
     experimental_constrained_fadd,             // llvm.experimental.constrained.fadd
     experimental_constrained_fdiv,             // llvm.experimental.constrained.fdiv
+    experimental_constrained_floor,            // llvm.experimental.constrained.floor
     experimental_constrained_fma,              // llvm.experimental.constrained.fma
     experimental_constrained_fmul,             // llvm.experimental.constrained.fmul
     experimental_constrained_frem,             // llvm.experimental.constrained.frem
@@ -83,12 +85,16 @@
     experimental_constrained_log,              // llvm.experimental.constrained.log
     experimental_constrained_log10,            // llvm.experimental.constrained.log10
     experimental_constrained_log2,             // llvm.experimental.constrained.log2
+    experimental_constrained_maxnum,           // llvm.experimental.constrained.maxnum
+    experimental_constrained_minnum,           // llvm.experimental.constrained.minnum
     experimental_constrained_nearbyint,        // llvm.experimental.constrained.nearbyint
     experimental_constrained_pow,              // llvm.experimental.constrained.pow
     experimental_constrained_powi,             // llvm.experimental.constrained.powi
     experimental_constrained_rint,             // llvm.experimental.constrained.rint
+    experimental_constrained_round,            // llvm.experimental.constrained.round
     experimental_constrained_sin,              // llvm.experimental.constrained.sin
     experimental_constrained_sqrt,             // llvm.experimental.constrained.sqrt
+    experimental_constrained_trunc,            // llvm.experimental.constrained.trunc
     experimental_deoptimize,                   // llvm.experimental.deoptimize
     experimental_gc_relocate,                  // llvm.experimental.gc.relocate
     experimental_gc_result,                    // llvm.experimental.gc.result
@@ -129,6 +135,7 @@
     instrprof_value_profile,                   // llvm.instrprof.value.profile
     invariant_end,                             // llvm.invariant.end
     invariant_start,                           // llvm.invariant.start
+    is_constant,                               // llvm.is.constant
     launder_invariant_group,                   // llvm.launder.invariant.group
     lifetime_end,                              // llvm.lifetime.end
     lifetime_start,                            // llvm.lifetime.start
@@ -146,6 +153,7 @@
     masked_load,                               // llvm.masked.load
     masked_scatter,                            // llvm.masked.scatter
     masked_store,                              // llvm.masked.store
+    maximum,                                   // llvm.maximum
     maxnum,                                    // llvm.maxnum
     memcpy,                                    // llvm.memcpy
     memcpy_element_unordered_atomic,           // llvm.memcpy.element.unordered.atomic
@@ -153,6 +161,7 @@
     memmove_element_unordered_atomic,          // llvm.memmove.element.unordered.atomic
     memset,                                    // llvm.memset
     memset_element_unordered_atomic,           // llvm.memset.element.unordered.atomic
+    minimum,                                   // llvm.minimum
     minnum,                                    // llvm.minnum
     nearbyint,                                 // llvm.nearbyint
     objectsize,                                // llvm.objectsize
@@ -166,6 +175,7 @@
     returnaddress,                             // llvm.returnaddress
     rint,                                      // llvm.rint
     round,                                     // llvm.round
+    sadd_sat,                                  // llvm.sadd.sat
     sadd_with_overflow,                        // llvm.sadd.with.overflow
     setjmp,                                    // llvm.setjmp
     sideeffect,                                // llvm.sideeffect
@@ -173,8 +183,10 @@
     sigsetjmp,                                 // llvm.sigsetjmp
     sin,                                       // llvm.sin
     smul_with_overflow,                        // llvm.smul.with.overflow
+    sponentry,                                 // llvm.sponentry
     sqrt,                                      // llvm.sqrt
     ssa_copy,                                  // llvm.ssa.copy
+    ssub_sat,                                  // llvm.ssub.sat
     ssub_with_overflow,                        // llvm.ssub.with.overflow
     stackguard,                                // llvm.stackguard
     stackprotector,                            // llvm.stackprotector
@@ -186,8 +198,10 @@
     trunc,                                     // llvm.trunc
     type_checked_load,                         // llvm.type.checked.load
     type_test,                                 // llvm.type.test
+    uadd_sat,                                  // llvm.uadd.sat
     uadd_with_overflow,                        // llvm.uadd.with.overflow
     umul_with_overflow,                        // llvm.umul.with.overflow
+    usub_sat,                                  // llvm.usub.sat
     usub_with_overflow,                        // llvm.usub.with.overflow
     vacopy,                                    // llvm.va_copy
     vaend,                                     // llvm.va_end
@@ -259,6 +273,10 @@
     aarch64_neon_fminnmv,                      // llvm.aarch64.neon.fminnmv
     aarch64_neon_fminp,                        // llvm.aarch64.neon.fminp
     aarch64_neon_fminv,                        // llvm.aarch64.neon.fminv
+    aarch64_neon_fmlal,                        // llvm.aarch64.neon.fmlal
+    aarch64_neon_fmlal2,                       // llvm.aarch64.neon.fmlal2
+    aarch64_neon_fmlsl,                        // llvm.aarch64.neon.fmlsl
+    aarch64_neon_fmlsl2,                       // llvm.aarch64.neon.fmlsl2
     aarch64_neon_fmulx,                        // llvm.aarch64.neon.fmulx
     aarch64_neon_frecpe,                       // llvm.aarch64.neon.frecpe
     aarch64_neon_frecps,                       // llvm.aarch64.neon.frecps
@@ -383,6 +401,7 @@
     aarch64_sdiv,                              // llvm.aarch64.sdiv
     aarch64_sisd_fabd,                         // llvm.aarch64.sisd.fabd
     aarch64_sisd_fcvtxn,                       // llvm.aarch64.sisd.fcvtxn
+    aarch64_space,                             // llvm.aarch64.space
     aarch64_stlxp,                             // llvm.aarch64.stlxp
     aarch64_stlxr,                             // llvm.aarch64.stlxr
     aarch64_stxp,                              // llvm.aarch64.stxp
@@ -392,7 +411,6 @@
     amdgcn_alignbyte,                          // llvm.amdgcn.alignbyte
     amdgcn_atomic_dec,                         // llvm.amdgcn.atomic.dec
     amdgcn_atomic_inc,                         // llvm.amdgcn.atomic.inc
-    amdgcn_break,                              // llvm.amdgcn.break
     amdgcn_buffer_atomic_add,                  // llvm.amdgcn.buffer.atomic.add
     amdgcn_buffer_atomic_and,                  // llvm.amdgcn.buffer.atomic.and
     amdgcn_buffer_atomic_cmpswap,              // llvm.amdgcn.buffer.atomic.cmpswap
@@ -435,7 +453,6 @@
     amdgcn_ds_permute,                         // llvm.amdgcn.ds.permute
     amdgcn_ds_swizzle,                         // llvm.amdgcn.ds.swizzle
     amdgcn_else,                               // llvm.amdgcn.else
-    amdgcn_else_break,                         // llvm.amdgcn.else.break
     amdgcn_end_cf,                             // llvm.amdgcn.end.cf
     amdgcn_exp,                                // llvm.amdgcn.exp
     amdgcn_exp_compr,                          // llvm.amdgcn.exp.compr
@@ -932,6 +949,23 @@
     amdgcn_ps_live,                            // llvm.amdgcn.ps.live
     amdgcn_qsad_pk_u16_u8,                     // llvm.amdgcn.qsad.pk.u16.u8
     amdgcn_queue_ptr,                          // llvm.amdgcn.queue.ptr
+    amdgcn_raw_buffer_atomic_add,              // llvm.amdgcn.raw.buffer.atomic.add
+    amdgcn_raw_buffer_atomic_and,              // llvm.amdgcn.raw.buffer.atomic.and
+    amdgcn_raw_buffer_atomic_cmpswap,          // llvm.amdgcn.raw.buffer.atomic.cmpswap
+    amdgcn_raw_buffer_atomic_or,               // llvm.amdgcn.raw.buffer.atomic.or
+    amdgcn_raw_buffer_atomic_smax,             // llvm.amdgcn.raw.buffer.atomic.smax
+    amdgcn_raw_buffer_atomic_smin,             // llvm.amdgcn.raw.buffer.atomic.smin
+    amdgcn_raw_buffer_atomic_sub,              // llvm.amdgcn.raw.buffer.atomic.sub
+    amdgcn_raw_buffer_atomic_swap,             // llvm.amdgcn.raw.buffer.atomic.swap
+    amdgcn_raw_buffer_atomic_umax,             // llvm.amdgcn.raw.buffer.atomic.umax
+    amdgcn_raw_buffer_atomic_umin,             // llvm.amdgcn.raw.buffer.atomic.umin
+    amdgcn_raw_buffer_atomic_xor,              // llvm.amdgcn.raw.buffer.atomic.xor
+    amdgcn_raw_buffer_load,                    // llvm.amdgcn.raw.buffer.load
+    amdgcn_raw_buffer_load_format,             // llvm.amdgcn.raw.buffer.load.format
+    amdgcn_raw_buffer_store,                   // llvm.amdgcn.raw.buffer.store
+    amdgcn_raw_buffer_store_format,            // llvm.amdgcn.raw.buffer.store.format
+    amdgcn_raw_tbuffer_load,                   // llvm.amdgcn.raw.tbuffer.load
+    amdgcn_raw_tbuffer_store,                  // llvm.amdgcn.raw.tbuffer.store
     amdgcn_rcp,                                // llvm.amdgcn.rcp
     amdgcn_rcp_legacy,                         // llvm.amdgcn.rcp.legacy
     amdgcn_readfirstlane,                      // llvm.amdgcn.readfirstlane
@@ -940,6 +974,7 @@
     amdgcn_rsq_clamp,                          // llvm.amdgcn.rsq.clamp
     amdgcn_rsq_legacy,                         // llvm.amdgcn.rsq.legacy
     amdgcn_s_barrier,                          // llvm.amdgcn.s.barrier
+    amdgcn_s_buffer_load,                      // llvm.amdgcn.s.buffer.load
     amdgcn_s_dcache_inv,                       // llvm.amdgcn.s.dcache.inv
     amdgcn_s_dcache_inv_vol,                   // llvm.amdgcn.s.dcache.inv.vol
     amdgcn_s_dcache_wb,                        // llvm.amdgcn.s.dcache.wb
@@ -964,6 +999,23 @@
     amdgcn_set_inactive,                       // llvm.amdgcn.set.inactive
     amdgcn_sffbh,                              // llvm.amdgcn.sffbh
     amdgcn_sin,                                // llvm.amdgcn.sin
+    amdgcn_struct_buffer_atomic_add,           // llvm.amdgcn.struct.buffer.atomic.add
+    amdgcn_struct_buffer_atomic_and,           // llvm.amdgcn.struct.buffer.atomic.and
+    amdgcn_struct_buffer_atomic_cmpswap,       // llvm.amdgcn.struct.buffer.atomic.cmpswap
+    amdgcn_struct_buffer_atomic_or,            // llvm.amdgcn.struct.buffer.atomic.or
+    amdgcn_struct_buffer_atomic_smax,          // llvm.amdgcn.struct.buffer.atomic.smax
+    amdgcn_struct_buffer_atomic_smin,          // llvm.amdgcn.struct.buffer.atomic.smin
+    amdgcn_struct_buffer_atomic_sub,           // llvm.amdgcn.struct.buffer.atomic.sub
+    amdgcn_struct_buffer_atomic_swap,          // llvm.amdgcn.struct.buffer.atomic.swap
+    amdgcn_struct_buffer_atomic_umax,          // llvm.amdgcn.struct.buffer.atomic.umax
+    amdgcn_struct_buffer_atomic_umin,          // llvm.amdgcn.struct.buffer.atomic.umin
+    amdgcn_struct_buffer_atomic_xor,           // llvm.amdgcn.struct.buffer.atomic.xor
+    amdgcn_struct_buffer_load,                 // llvm.amdgcn.struct.buffer.load
+    amdgcn_struct_buffer_load_format,          // llvm.amdgcn.struct.buffer.load.format
+    amdgcn_struct_buffer_store,                // llvm.amdgcn.struct.buffer.store
+    amdgcn_struct_buffer_store_format,         // llvm.amdgcn.struct.buffer.store.format
+    amdgcn_struct_tbuffer_load,                // llvm.amdgcn.struct.tbuffer.load
+    amdgcn_struct_tbuffer_store,               // llvm.amdgcn.struct.tbuffer.store
     amdgcn_tbuffer_load,                       // llvm.amdgcn.tbuffer.load
     amdgcn_tbuffer_store,                      // llvm.amdgcn.tbuffer.store
     amdgcn_trig_preop,                         // llvm.amdgcn.trig.preop
@@ -5052,6 +5104,8 @@
     ppc_qpx_qvstfiwa,                          // llvm.ppc.qpx.qvstfiwa
     ppc_qpx_qvstfs,                            // llvm.ppc.qpx.qvstfs
     ppc_qpx_qvstfsa,                           // llvm.ppc.qpx.qvstfsa
+    ppc_scalar_extract_expq,                   // llvm.ppc.scalar.extract.expq
+    ppc_scalar_insert_exp_qp,                  // llvm.ppc.scalar.insert.exp.qp
     ppc_set_texasr,                            // llvm.ppc.set.texasr
     ppc_set_texasru,                           // llvm.ppc.set.texasru
     ppc_set_tfhar,                             // llvm.ppc.set.tfhar
@@ -5169,6 +5223,14 @@
     r600_txl,                                  // llvm.r600.txl
     r600_txlc,                                 // llvm.r600.txlc
     r600_txq,                                  // llvm.r600.txq
+    riscv_masked_atomicrmw_add_i32,            // llvm.riscv.masked.atomicrmw.add.i32
+    riscv_masked_atomicrmw_max_i32,            // llvm.riscv.masked.atomicrmw.max.i32
+    riscv_masked_atomicrmw_min_i32,            // llvm.riscv.masked.atomicrmw.min.i32
+    riscv_masked_atomicrmw_nand_i32,           // llvm.riscv.masked.atomicrmw.nand.i32
+    riscv_masked_atomicrmw_sub_i32,            // llvm.riscv.masked.atomicrmw.sub.i32
+    riscv_masked_atomicrmw_umax_i32,           // llvm.riscv.masked.atomicrmw.umax.i32
+    riscv_masked_atomicrmw_umin_i32,           // llvm.riscv.masked.atomicrmw.umin.i32
+    riscv_masked_atomicrmw_xchg_i32,           // llvm.riscv.masked.atomicrmw.xchg.i32
     s390_efpc,                                 // llvm.s390.efpc
     s390_etnd,                                 // llvm.s390.etnd
     s390_lcbb,                                 // llvm.s390.lcbb
@@ -5389,9 +5451,12 @@
     s390_vupllb,                               // llvm.s390.vupllb
     s390_vupllf,                               // llvm.s390.vupllf
     s390_vupllh,                               // llvm.s390.vupllh
+    wasm_alltrue,                              // llvm.wasm.alltrue
+    wasm_anytrue,                              // llvm.wasm.anytrue
     wasm_atomic_notify,                        // llvm.wasm.atomic.notify
     wasm_atomic_wait_i32,                      // llvm.wasm.atomic.wait.i32
     wasm_atomic_wait_i64,                      // llvm.wasm.atomic.wait.i64
+    wasm_bitselect,                            // llvm.wasm.bitselect
     wasm_catch,                                // llvm.wasm.catch
     wasm_current_memory,                       // llvm.wasm.current.memory
     wasm_get_ehselector,                       // llvm.wasm.get.ehselector
@@ -5404,7 +5469,11 @@
     wasm_memory_grow,                          // llvm.wasm.memory.grow
     wasm_memory_size,                          // llvm.wasm.memory.size
     wasm_rethrow,                              // llvm.wasm.rethrow
+    wasm_sub_saturate_signed,                  // llvm.wasm.sub.saturate.signed
+    wasm_sub_saturate_unsigned,                // llvm.wasm.sub.saturate.unsigned
     wasm_throw,                                // llvm.wasm.throw
+    wasm_trunc_saturate_signed,                // llvm.wasm.trunc.saturate.signed
+    wasm_trunc_saturate_unsigned,              // llvm.wasm.trunc.saturate.unsigned
     x86_3dnow_pavgusb,                         // llvm.x86.3dnow.pavgusb
     x86_3dnow_pf2id,                           // llvm.x86.3dnow.pf2id
     x86_3dnow_pfacc,                           // llvm.x86.3dnow.pfacc
@@ -5651,6 +5720,18 @@
     x86_avx512_gatherpf_dps_512,               // llvm.x86.avx512.gatherpf.dps.512
     x86_avx512_gatherpf_qpd_512,               // llvm.x86.avx512.gatherpf.qpd.512
     x86_avx512_gatherpf_qps_512,               // llvm.x86.avx512.gatherpf.qps.512
+    x86_avx512_kadd_b,                         // llvm.x86.avx512.kadd.b
+    x86_avx512_kadd_d,                         // llvm.x86.avx512.kadd.d
+    x86_avx512_kadd_q,                         // llvm.x86.avx512.kadd.q
+    x86_avx512_kadd_w,                         // llvm.x86.avx512.kadd.w
+    x86_avx512_ktestc_b,                       // llvm.x86.avx512.ktestc.b
+    x86_avx512_ktestc_d,                       // llvm.x86.avx512.ktestc.d
+    x86_avx512_ktestc_q,                       // llvm.x86.avx512.ktestc.q
+    x86_avx512_ktestc_w,                       // llvm.x86.avx512.ktestc.w
+    x86_avx512_ktestz_b,                       // llvm.x86.avx512.ktestz.b
+    x86_avx512_ktestz_d,                       // llvm.x86.avx512.ktestz.d
+    x86_avx512_ktestz_q,                       // llvm.x86.avx512.ktestz.q
+    x86_avx512_ktestz_w,                       // llvm.x86.avx512.ktestz.w
     x86_avx512_mask_add_sd_round,              // llvm.x86.avx512.mask.add.sd.round
     x86_avx512_mask_add_ss_round,              // llvm.x86.avx512.mask.add.ss.round
     x86_avx512_mask_cmp_sd,                    // llvm.x86.avx512.mask.cmp.sd
@@ -5790,12 +5871,6 @@
     x86_avx512_mask_min_ss_round,              // llvm.x86.avx512.mask.min.ss.round
     x86_avx512_mask_mul_sd_round,              // llvm.x86.avx512.mask.mul.sd.round
     x86_avx512_mask_mul_ss_round,              // llvm.x86.avx512.mask.mul.ss.round
-    x86_avx512_mask_padds_b_128,               // llvm.x86.avx512.mask.padds.b.128
-    x86_avx512_mask_padds_b_256,               // llvm.x86.avx512.mask.padds.b.256
-    x86_avx512_mask_padds_b_512,               // llvm.x86.avx512.mask.padds.b.512
-    x86_avx512_mask_padds_w_128,               // llvm.x86.avx512.mask.padds.w.128
-    x86_avx512_mask_padds_w_256,               // llvm.x86.avx512.mask.padds.w.256
-    x86_avx512_mask_padds_w_512,               // llvm.x86.avx512.mask.padds.w.512
     x86_avx512_mask_pmov_db_128,               // llvm.x86.avx512.mask.pmov.db.128
     x86_avx512_mask_pmov_db_256,               // llvm.x86.avx512.mask.pmov.db.256
     x86_avx512_mask_pmov_db_512,               // llvm.x86.avx512.mask.pmov.db.512
@@ -5907,12 +5982,6 @@
     x86_avx512_mask_pmultishift_qb_128,        // llvm.x86.avx512.mask.pmultishift.qb.128
     x86_avx512_mask_pmultishift_qb_256,        // llvm.x86.avx512.mask.pmultishift.qb.256
     x86_avx512_mask_pmultishift_qb_512,        // llvm.x86.avx512.mask.pmultishift.qb.512
-    x86_avx512_mask_psubs_b_128,               // llvm.x86.avx512.mask.psubs.b.128
-    x86_avx512_mask_psubs_b_256,               // llvm.x86.avx512.mask.psubs.b.256
-    x86_avx512_mask_psubs_b_512,               // llvm.x86.avx512.mask.psubs.b.512
-    x86_avx512_mask_psubs_w_128,               // llvm.x86.avx512.mask.psubs.w.128
-    x86_avx512_mask_psubs_w_256,               // llvm.x86.avx512.mask.psubs.w.256
-    x86_avx512_mask_psubs_w_512,               // llvm.x86.avx512.mask.psubs.w.512
     x86_avx512_mask_range_pd_128,              // llvm.x86.avx512.mask.range.pd.128
     x86_avx512_mask_range_pd_256,              // llvm.x86.avx512.mask.range.pd.256
     x86_avx512_mask_range_pd_512,              // llvm.x86.avx512.mask.range.pd.512
@@ -6012,6 +6081,8 @@
     x86_avx512_packsswb_512,                   // llvm.x86.avx512.packsswb.512
     x86_avx512_packusdw_512,                   // llvm.x86.avx512.packusdw.512
     x86_avx512_packuswb_512,                   // llvm.x86.avx512.packuswb.512
+    x86_avx512_padds_b_512,                    // llvm.x86.avx512.padds.b.512
+    x86_avx512_padds_w_512,                    // llvm.x86.avx512.padds.w.512
     x86_avx512_permvar_df_256,                 // llvm.x86.avx512.permvar.df.256
     x86_avx512_permvar_df_512,                 // llvm.x86.avx512.permvar.df.512
     x86_avx512_permvar_di_256,                 // llvm.x86.avx512.permvar.di.256
@@ -6094,6 +6165,8 @@
     x86_avx512_psrlv_w_128,                    // llvm.x86.avx512.psrlv.w.128
     x86_avx512_psrlv_w_256,                    // llvm.x86.avx512.psrlv.w.256
     x86_avx512_psrlv_w_512,                    // llvm.x86.avx512.psrlv.w.512
+    x86_avx512_psubs_b_512,                    // llvm.x86.avx512.psubs.b.512
+    x86_avx512_psubs_w_512,                    // llvm.x86.avx512.psubs.w.512
     x86_avx512_pternlog_d_128,                 // llvm.x86.avx512.pternlog.d.128
     x86_avx512_pternlog_d_256,                 // llvm.x86.avx512.pternlog.d.256
     x86_avx512_pternlog_d_512,                 // llvm.x86.avx512.pternlog.d.512

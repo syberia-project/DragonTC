@@ -499,6 +499,38 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::AcquiredBefore; }
 };
 
+class AddressSpaceAttr : public TypeAttr {
+int addressSpace;
+
+public:
+  static AddressSpaceAttr *CreateImplicit(ASTContext &Ctx, int AddressSpace, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) AddressSpaceAttr(Loc, Ctx, AddressSpace, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  AddressSpaceAttr(SourceRange R, ASTContext &Ctx
+              , int AddressSpace
+              , unsigned SI
+             )
+    : TypeAttr(attr::AddressSpace, R, SI, false)
+              , addressSpace(AddressSpace)
+  {
+  }
+
+  AddressSpaceAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  int getAddressSpace() const {
+    return addressSpace;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::AddressSpace; }
+};
+
 class AliasAttr : public Attr {
 unsigned aliaseeLength;
 char *aliasee;
@@ -761,6 +793,30 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::AllocSize; }
+};
+
+class AlwaysDestroyAttr : public InheritableAttr {
+public:
+  static AlwaysDestroyAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) AlwaysDestroyAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  AlwaysDestroyAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::AlwaysDestroy, R, SI, false, false)
+  {
+  }
+
+  AlwaysDestroyAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::AlwaysDestroy; }
 };
 
 class AlwaysInlineAttr : public InheritableAttr {
@@ -1462,6 +1518,7 @@ static llvm::StringRef getPrettyPlatformName(llvm::StringRef Platform) {
              .Case("macos_app_extension", "macOS (App Extension)")
              .Case("tvos_app_extension", "tvOS (App Extension)")
              .Case("watchos_app_extension", "watchOS (App Extension)")
+             .Case("swift", "Swift")
              .Default(llvm::StringRef());
 }
 static llvm::StringRef getPlatformNameSourceSpelling(llvm::StringRef Platform) {
@@ -1800,10 +1857,8 @@ public:
 
 
 
-    unsigned ActiveArgIndex = 0;
-
-    IdentifierInfo *getCurCPUName() const {
-      return *(cpus_begin() + ActiveArgIndex);
+    IdentifierInfo *getCPUName(unsigned Index) const {
+      return *(cpus_begin() + Index);
     }
   
 
@@ -2560,6 +2615,30 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::DLLExport; }
 };
 
+class DLLExportStaticLocalAttr : public InheritableAttr {
+public:
+  static DLLExportStaticLocalAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) DLLExportStaticLocalAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  DLLExportStaticLocalAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::DLLExportStaticLocal, R, SI, false, false)
+  {
+  }
+
+  DLLExportStaticLocalAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::DLLExportStaticLocal; }
+};
+
 class DLLImportAttr : public InheritableAttr {
 public:
   static DLLImportAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
@@ -2589,6 +2668,30 @@ public:
   
 
   static bool classof(const Attr *A) { return A->getKind() == attr::DLLImport; }
+};
+
+class DLLImportStaticLocalAttr : public InheritableAttr {
+public:
+  static DLLImportStaticLocalAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) DLLImportStaticLocalAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  DLLImportStaticLocalAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::DLLImportStaticLocal, R, SI, false, false)
+  {
+  }
+
+  DLLImportStaticLocalAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::DLLImportStaticLocal; }
 };
 
 class DeprecatedAttr : public InheritableAttr {
@@ -2988,6 +3091,30 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::EnumExtensibility; }
+};
+
+class ExcludeFromExplicitInstantiationAttr : public InheritableAttr {
+public:
+  static ExcludeFromExplicitInstantiationAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) ExcludeFromExplicitInstantiationAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ExcludeFromExplicitInstantiationAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::ExcludeFromExplicitInstantiation, R, SI, false, false)
+  {
+  }
+
+  ExcludeFromExplicitInstantiationAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ExcludeFromExplicitInstantiation; }
 };
 
 class ExclusiveTrylockFunctionAttr : public InheritableAttr {
@@ -4872,6 +4999,30 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::NoDebug; }
 };
 
+class NoDestroyAttr : public InheritableAttr {
+public:
+  static NoDestroyAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) NoDestroyAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  NoDestroyAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : InheritableAttr(attr::NoDestroy, R, SI, false, false)
+  {
+  }
+
+  NoDestroyAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::NoDestroy; }
+};
+
 class NoDuplicateAttr : public InheritableAttr {
 public:
   static NoDuplicateAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
@@ -5544,7 +5695,7 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::OMPDeclareSimdDecl; }
 };
 
-class OMPDeclareTargetDeclAttr : public Attr {
+class OMPDeclareTargetDeclAttr : public InheritableAttr {
 public:
   enum MapTypeTy {
     MT_To,
@@ -5564,7 +5715,7 @@ public:
               , MapTypeTy MapType
               , unsigned SI
              )
-    : Attr(attr::OMPDeclareTargetDecl, R, SI, false)
+    : InheritableAttr(attr::OMPDeclareTargetDecl, R, SI, false, false)
               , mapType(MapType)
   {
   }
@@ -5601,6 +5752,15 @@ public:
       // Use fake syntax because it is for testing and debugging purpose only.
       if (getMapType() != MT_To)
         OS << ' ' << ConvertMapTypeTyToStr(getMapType());
+    }
+    static llvm::Optional<MapTypeTy>
+    isDeclareTargetDeclaration(const ValueDecl *VD) {
+      if (!VD->hasAttrs())
+        return llvm::None;
+      if (const auto *Attr = VD->getAttr<OMPDeclareTargetDeclAttr>())
+        return Attr->getMapType();
+
+      return llvm::None;
     }
   
 
@@ -5871,6 +6031,38 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCExplicitProtocolImpl; }
 };
 
+class ObjCGCAttr : public TypeAttr {
+IdentifierInfo * kind;
+
+public:
+  static ObjCGCAttr *CreateImplicit(ASTContext &Ctx, IdentifierInfo * Kind, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) ObjCGCAttr(Loc, Ctx, Kind, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ObjCGCAttr(SourceRange R, ASTContext &Ctx
+              , IdentifierInfo * Kind
+              , unsigned SI
+             )
+    : TypeAttr(attr::ObjCGC, R, SI, false)
+              , kind(Kind)
+  {
+  }
+
+  ObjCGCAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  IdentifierInfo * getKind() const {
+    return kind;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCGC; }
+};
+
 class ObjCIndependentClassAttr : public InheritableAttr {
 public:
   static ObjCIndependentClassAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
@@ -5893,6 +6085,54 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCIndependentClass; }
+};
+
+class ObjCInertUnsafeUnretainedAttr : public TypeAttr {
+public:
+  static ObjCInertUnsafeUnretainedAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) ObjCInertUnsafeUnretainedAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ObjCInertUnsafeUnretainedAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::ObjCInertUnsafeUnretained, R, SI, false)
+  {
+  }
+
+  ObjCInertUnsafeUnretainedAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCInertUnsafeUnretained; }
+};
+
+class ObjCKindOfAttr : public TypeAttr {
+public:
+  static ObjCKindOfAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) ObjCKindOfAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ObjCKindOfAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::ObjCKindOf, R, SI, false)
+  {
+  }
+
+  ObjCKindOfAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCKindOf; }
 };
 
 class ObjCMethodFamilyAttr : public InheritableAttr {
@@ -5986,6 +6226,38 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ObjCNSObject; }
+};
+
+class ObjCOwnershipAttr : public InheritableAttr {
+IdentifierInfo * kind;
+
+public:
+  static ObjCOwnershipAttr *CreateImplicit(ASTContext &Ctx, IdentifierInfo * Kind, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) ObjCOwnershipAttr(Loc, Ctx, Kind, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  ObjCOwnershipAttr(SourceRange R, ASTContext &Ctx
+              , IdentifierInfo * Kind
+              , unsigned SI
+             )
+    : InheritableAttr(attr::ObjCOwnership, R, SI, false, false)
+              , kind(Kind)
+  {
+  }
+
+  ObjCOwnershipAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+  IdentifierInfo * getKind() const {
+    return kind;
+  }
+
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::ObjCOwnership; }
 };
 
 class ObjCPreciseLifetimeAttr : public InheritableAttr {
@@ -6247,6 +6519,78 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLAccess; }
 };
 
+class OpenCLConstantAddressSpaceAttr : public TypeAttr {
+public:
+  static OpenCLConstantAddressSpaceAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) OpenCLConstantAddressSpaceAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  OpenCLConstantAddressSpaceAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::OpenCLConstantAddressSpace, R, SI, false)
+  {
+  }
+
+  OpenCLConstantAddressSpaceAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLConstantAddressSpace; }
+};
+
+class OpenCLGenericAddressSpaceAttr : public TypeAttr {
+public:
+  static OpenCLGenericAddressSpaceAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) OpenCLGenericAddressSpaceAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  OpenCLGenericAddressSpaceAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::OpenCLGenericAddressSpace, R, SI, false)
+  {
+  }
+
+  OpenCLGenericAddressSpaceAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLGenericAddressSpace; }
+};
+
+class OpenCLGlobalAddressSpaceAttr : public TypeAttr {
+public:
+  static OpenCLGlobalAddressSpaceAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) OpenCLGlobalAddressSpaceAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  OpenCLGlobalAddressSpaceAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::OpenCLGlobalAddressSpace, R, SI, false)
+  {
+  }
+
+  OpenCLGlobalAddressSpaceAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLGlobalAddressSpace; }
+};
+
 class OpenCLIntelReqdSubGroupSizeAttr : public InheritableAttr {
 unsigned subGroupSize;
 
@@ -6301,6 +6645,54 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLKernel; }
+};
+
+class OpenCLLocalAddressSpaceAttr : public TypeAttr {
+public:
+  static OpenCLLocalAddressSpaceAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) OpenCLLocalAddressSpaceAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  OpenCLLocalAddressSpaceAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::OpenCLLocalAddressSpace, R, SI, false)
+  {
+  }
+
+  OpenCLLocalAddressSpaceAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLLocalAddressSpace; }
+};
+
+class OpenCLPrivateAddressSpaceAttr : public TypeAttr {
+public:
+  static OpenCLPrivateAddressSpaceAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) OpenCLPrivateAddressSpaceAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  OpenCLPrivateAddressSpaceAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::OpenCLPrivateAddressSpace, R, SI, false)
+  {
+  }
+
+  OpenCLPrivateAddressSpaceAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::OpenCLPrivateAddressSpace; }
 };
 
 class OpenCLUnrollHintAttr : public InheritableAttr {
@@ -6981,6 +7373,54 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::PtGuardedVar; }
 };
 
+class Ptr32Attr : public TypeAttr {
+public:
+  static Ptr32Attr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) Ptr32Attr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  Ptr32Attr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::Ptr32, R, SI, false)
+  {
+  }
+
+  Ptr32Attr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Ptr32; }
+};
+
+class Ptr64Attr : public TypeAttr {
+public:
+  static Ptr64Attr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) Ptr64Attr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  Ptr64Attr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::Ptr64, R, SI, false)
+  {
+  }
+
+  Ptr64Attr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::Ptr64; }
+};
+
 class PureAttr : public InheritableAttr {
 public:
   static PureAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
@@ -7509,6 +7949,30 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::ReturnsTwice; }
+};
+
+class SPtrAttr : public TypeAttr {
+public:
+  static SPtrAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) SPtrAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  SPtrAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::SPtr, R, SI, false)
+  {
+  }
+
+  SPtrAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::SPtr; }
 };
 
 class ScopedLockableAttr : public InheritableAttr {
@@ -8079,6 +8543,39 @@ public:
       return parse(getFeaturesStr());
     }
 
+    StringRef getArchitecture() const {
+      StringRef Features = getFeaturesStr();
+      if (Features == "default") return {};
+
+      SmallVector<StringRef, 1> AttrFeatures;
+      Features.split(AttrFeatures, ",");
+
+      for (auto &Feature : AttrFeatures) {
+        Feature = Feature.trim();
+        if (Feature.startswith("arch="))
+          return Feature.drop_front(sizeof("arch=") - 1);
+      }
+      return "";
+    }
+
+    // Gets the list of features as simple string-refs with no +/- or 'no-'.
+    // Only adds the items to 'Out' that are additions.
+    void getAddedFeatures(llvm::SmallVectorImpl<StringRef> &Out) const {
+      StringRef Features = getFeaturesStr();
+      if (Features == "default") return;
+
+      SmallVector<StringRef, 1> AttrFeatures;
+      Features.split(AttrFeatures, ",");
+
+      for (auto &Feature : AttrFeatures) {
+        Feature = Feature.trim();
+
+        if (!Feature.startswith("no-") && !Feature.startswith("arch=") &&
+            !Feature.startswith("fpmath=") && !Feature.startswith("tune="))
+          Out.push_back(Feature);
+      }
+    }
+
     template<class Compare>
     ParsedTargetAttr parse(Compare cmp) const {
       ParsedTargetAttr Attrs = parse();
@@ -8352,6 +8849,78 @@ public:
   static bool classof(const Attr *A) { return A->getKind() == attr::TryAcquireCapability; }
 };
 
+class TypeNonNullAttr : public TypeAttr {
+public:
+  static TypeNonNullAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) TypeNonNullAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  TypeNonNullAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::TypeNonNull, R, SI, false)
+  {
+  }
+
+  TypeNonNullAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::TypeNonNull; }
+};
+
+class TypeNullUnspecifiedAttr : public TypeAttr {
+public:
+  static TypeNullUnspecifiedAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) TypeNullUnspecifiedAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  TypeNullUnspecifiedAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::TypeNullUnspecified, R, SI, false)
+  {
+  }
+
+  TypeNullUnspecifiedAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::TypeNullUnspecified; }
+};
+
+class TypeNullableAttr : public TypeAttr {
+public:
+  static TypeNullableAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) TypeNullableAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  TypeNullableAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::TypeNullable, R, SI, false)
+  {
+  }
+
+  TypeNullableAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::TypeNullable; }
+};
+
 class TypeTagForDatatypeAttr : public InheritableAttr {
 IdentifierInfo * argumentKind;
 
@@ -8469,6 +9038,30 @@ public:
 
 
   static bool classof(const Attr *A) { return A->getKind() == attr::TypeVisibility; }
+};
+
+class UPtrAttr : public TypeAttr {
+public:
+  static UPtrAttr *CreateImplicit(ASTContext &Ctx, SourceRange Loc = SourceRange()) {
+    auto *A = new (Ctx) UPtrAttr(Loc, Ctx, 0);
+    A->setImplicit(true);
+    return A;
+  }
+
+  UPtrAttr(SourceRange R, ASTContext &Ctx
+              , unsigned SI
+             )
+    : TypeAttr(attr::UPtr, R, SI, false)
+  {
+  }
+
+  UPtrAttr *clone(ASTContext &C) const;
+  void printPretty(raw_ostream &OS,
+                   const PrintingPolicy &Policy) const;
+  const char *getSpelling() const;
+
+
+  static bool classof(const Attr *A) { return A->getKind() == attr::UPtr; }
 };
 
 class UnavailableAttr : public InheritableAttr {
